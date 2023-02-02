@@ -4,13 +4,6 @@ import api from "../api";
 const Users = () => {
   const [users, setUsers] = useState(api.users.fetchAll());
 
-  const renderQualities = (quality) => {
-    return quality.map((elem) => (
-      <span key={elem._id} className={"badge bg-" + elem.color}>
-        {elem.name}
-      </span>
-    ));
-  };
   const handleDelete = (userId) => {
     setUsers((prevState) => prevState.filter((users) => users._id !== userId));
   };
@@ -32,25 +25,6 @@ const Users = () => {
     }
   };
 
-  const renderUsers = () => {
-    return users.map((el) => (
-      <tr key={el._id}>
-        <td>{el.name}</td>
-        <td>{renderQualities(el.qualities)}</td>
-        <td>{el.profession.name}</td>
-        <td>{el.completedMeetings}</td>
-        <td>{el.rate} /5</td>
-        <td>
-          <button
-            className="btn btn-danger"
-            onClick={() => handleDelete(el._id)}
-          >
-            delete
-          </button>
-        </td>
-      </tr>
-    ));
-  };
   return (
     <>
       <h2>{renderPhrase()}</h2>
@@ -65,7 +39,31 @@ const Users = () => {
             <th></th>
           </tr>
         </thead>
-        <tbody>{renderUsers()}</tbody>
+        <tbody>
+          {users.map((el) => (
+            <tr key={el._id}>
+              <td>{el.name}</td>
+              <td>
+                {el.qualities.map((elem) => (
+                  <span key={elem._id} className={"badge bg-" + elem.color}>
+                    {elem.name}
+                  </span>
+                ))}
+              </td>
+              <td>{el.profession.name}</td>
+              <td>{el.completedMeetings}</td>
+              <td>{el.rate} /5</td>
+              <td>
+                <button
+                  className="btn btn-danger"
+                  onClick={() => handleDelete(el._id)}
+                >
+                  delete
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
       </table>
     </>
   );
