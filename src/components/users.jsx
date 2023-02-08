@@ -28,43 +28,48 @@ const Users = () => {
   return (
     <>
       <h2>{renderPhrase()}</h2>
-      <table className="table">
-        <thead>
-          <tr>
-            <th>Имя</th>
-            <th>Качества</th>
-            <th>Профессия</th>
-            <th>Встретился, раз</th>
-            <th>Оценка</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {users.map((el) => (
-            <tr key={el._id}>
-              <td>{el.name}</td>
-              <td>
-                {el.qualities.map((elem) => (
-                  <span key={elem._id} className={"badge bg-" + elem.color}>
-                    {elem.name}
-                  </span>
-                ))}
-              </td>
-              <td>{el.profession.name}</td>
-              <td>{el.completedMeetings}</td>
-              <td>{el.rate} /5</td>
-              <td>
-                <button
-                  className="btn btn-danger"
-                  onClick={() => handleDelete(el._id)}
-                >
-                  delete
-                </button>
-              </td>
+      {users.length !== 0 && (
+        <table className="table">
+          <thead>
+            <tr>
+              <th>Имя</th>
+              <th>Качества</th>
+              <th>Профессия</th>
+              <th>Встретился, раз</th>
+              <th>Оценка</th>
+              <th></th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {users.map((el) => (
+              <tr key={el._id}>
+                <td>{el.name}</td>
+                <td>
+                  {el.qualities.map((elem) => (
+                    <span
+                      key={elem._id}
+                      className={"mx-1 badge bg-" + elem.color}
+                    >
+                      {elem.name}
+                    </span>
+                  ))}
+                </td>
+                <td>{el.profession.name}</td>
+                <td>{el.completedMeetings}</td>
+                <td>{el.rate} /5</td>
+                <td>
+                  <button
+                    className="btn btn-danger"
+                    onClick={() => handleDelete(el._id)}
+                  >
+                    delete
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
     </>
   );
 };
