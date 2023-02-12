@@ -1,33 +1,9 @@
-import React, { useState } from "react";
-import api from "../api";
+import React from "react";
+import User from "./user";
 
-const Users = () => {
-  const [users, setUsers] = useState(api.users.fetchAll());
-
-  const handleDelete = (userId) => {
-    setUsers((prevState) => prevState.filter((users) => users._id !== userId));
-  };
-  const renderPhrase = () => {
-    if (users.length > 4 || users.length === 1) {
-      return (
-        <span className="badge bg-primary">
-          {users.length} человек тусанет с тобой сегодня
-        </span>
-      );
-    } else if (users.length > 1 && users.length < 5) {
-      return (
-        <span className="badge bg-primary">
-          {users.length} человека тусанет с тобой сегодня
-        </span>
-      );
-    } else if (users.length === 0) {
-      return <span className="badge bg-danger">Никто с тобой не тусанет</span>;
-    }
-  };
-
+const Users = ({ users, ...rest }) => {
   return (
     <>
-      <h2>{renderPhrase()}</h2>
       {users.length !== 0 && (
         <table className="table">
           <thead>
@@ -37,35 +13,13 @@ const Users = () => {
               <th>Профессия</th>
               <th>Встретился, раз</th>
               <th>Оценка</th>
+              <th>Избранное</th>
               <th></th>
             </tr>
           </thead>
           <tbody>
             {users.map((el) => (
-              <tr key={el._id}>
-                <td>{el.name}</td>
-                <td>
-                  {el.qualities.map((elem) => (
-                    <span
-                      key={elem._id}
-                      className={"mx-1 badge bg-" + elem.color}
-                    >
-                      {elem.name}
-                    </span>
-                  ))}
-                </td>
-                <td>{el.profession.name}</td>
-                <td>{el.completedMeetings}</td>
-                <td>{el.rate} /5</td>
-                <td>
-                  <button
-                    className="btn btn-danger"
-                    onClick={() => handleDelete(el._id)}
-                  >
-                    delete
-                  </button>
-                </td>
-              </tr>
+              <User {...el} onDelete={rest.onDelete} onMark={rest.onMark} />
             ))}
           </tbody>
         </table>
