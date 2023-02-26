@@ -1,27 +1,49 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Users from "./components/users";
-import SearchStatus from "./components/searchStatus";
 import api from "./api";
 
 function App() {
-    const [users, setUsers] = useState(api.users.fetchAll());
+    const [users, setUsers] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchUsers = async () => {
+            try {
+                const data = await api.users.fetchAll();
+                setUsers(data);
+                setLoading(false);
+            } catch (error) {
+                console.error(error);
+                setLoading(false);
+            }
+        };
+
+        fetchUsers();
+    }, []);
+
     const handleDelete = (userId) => {
-        setUsers(users.filter((user) => user._id !== userId));
+        setUsers((prevUsers) =>
+            prevUsers.filter((user) => user._id !== userId)
+        );
     };
+
     const handleToggleBookMark = (id) => {
-        setUsers(
-            users.map((user) => {
+        setUsers((prevUsers) =>
+            prevUsers.map((user) => {
                 if (user._id === id) {
                     return { ...user, bookmark: !user.bookmark };
                 }
                 return user;
             })
         );
-        console.log(id);
     };
+
+    if (loading) {
+        return <div>Loading...</div>;
+    }
+
     return (
         <div>
-            <SearchStatus length={users.length} />
             <Users
                 onDelete={handleDelete}
                 onToggleBookMark={handleToggleBookMark}
