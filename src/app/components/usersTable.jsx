@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+
 import BookMark from "./bookmark";
 import QualitiesList from "./qualitiesList";
 import Table from "./table";
@@ -58,7 +59,7 @@ const UserTable = ({
 UserTable.propTypes = {
     users: PropTypes.array.isRequired,
     onSort: PropTypes.func.isRequired,
-    selectedSort: PropTypes.func.isRequired,
+    selectedSort: PropTypes.object.isRequired,
     onToggleBookMark: PropTypes.func.isRequired,
     onDelete: PropTypes.func.isRequired
 };
