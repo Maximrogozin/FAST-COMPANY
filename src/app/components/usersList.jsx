@@ -17,6 +17,9 @@ const UsersList = () => {
     const [sortBy, setSortBy] = useState({ path: "name", order: "asc" });
     const pageSize = 8;
     const [users, setUsers] = useState();
+
+    const [data, setData] = useState("");
+
     useEffect(() => {
         api.users.fetchAll().then((data) => {
             setUsers(data);
@@ -84,8 +87,9 @@ const UsersList = () => {
         );
         const usersCrop = paginate(sortedUsers, currentPage, pageSize);
         const clearFilter = () => {
+            setData("");
+            handleSearch();
             setSelectedProf();
-            handleSearch("");
         };
 
         return (
@@ -108,7 +112,11 @@ const UsersList = () => {
                 )}
                 <div className="d-flex flex-column">
                     <SearchStatus length={count} />
-                    <SearchUser handleSearch={handleSearch} />
+                    <SearchUser
+                        handleSearch={handleSearch}
+                        data={data}
+                        setData={setData}
+                    />
                     {count > 0 && (
                         <UserTable
                             users={usersCrop}

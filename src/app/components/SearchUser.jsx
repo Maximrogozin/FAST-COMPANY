@@ -1,9 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 
-const SearchUser = ({ handleSearch }) => {
-    const [data, setData] = useState("");
-
+const SearchUser = ({ handleSearch, data, setData }) => {
     const handleChange = (event) => {
         const value = event.target.value;
         setData(value);
@@ -26,7 +24,8 @@ const SearchUser = ({ handleSearch }) => {
 
 SearchUser.propTypes = {
     handleSearch: PropTypes.func.isRequired,
-    clear: PropTypes.bool
+    setData: PropTypes.func,
+    data: PropTypes.string
 };
 
 export default SearchUser;
