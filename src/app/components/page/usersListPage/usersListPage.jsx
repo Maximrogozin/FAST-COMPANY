@@ -1,40 +1,31 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import { paginate } from "../utils/paginate";
-import Pagination from "./pagination";
-import api from "../api";
-import GroupList from "./groupList";
-import SearchStatus from "./searchStatus";
-import UserTable from "./usersTable";
+import { paginate } from "../../../utils/paginate";
+import Pagination from "../../common/pagination";
+import api from "../../../api";
+import GroupList from "../../common/groupList";
+import SearchStatus from "../../ui/searchStatus";
+import UserTable from "../../ui/usersTable";
 import _ from "lodash";
-import SearchUser from "./SearchUser";
 
-const UsersList = () => {
+const UsersListPage = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [professions, setProfession] = useState();
     const [selectedProf, setSelectedProf] = useState();
-    const [originalUsers, setOriginalUsers] = useState([]);
     const [sortBy, setSortBy] = useState({ path: "name", order: "asc" });
     const pageSize = 8;
     const [users, setUsers] = useState();
-
-    const [data, setData] = useState("");
+    const [searchUser, setSearchUser] = useState("");
 
     useEffect(() => {
         api.users.fetchAll().then((data) => {
             setUsers(data);
-            setOriginalUsers(data);
         });
     }, []);
 
-    const handleSearch = (target) => {
-        if (target) {
-            setUsers(
-                originalUsers.filter((user) => user.name.includes(target))
-            );
-        } else {
-            setUsers(originalUsers);
-        }
+    const handleSearch = ({ target }) => {
+        setSelectedProf(undefined);
+        setSearchUser(target.value);
     };
 
     const handleDelete = (userId) => {
@@ -56,10 +47,10 @@ const UsersList = () => {
 
     useEffect(() => {
         setCurrentPage(1);
-    }, [selectedProf]);
+    }, [selectedProf, searchUser]);
 
     const handleProfessionSelect = (item) => {
-        handleSearch();
+        if (searchUser !== "") setSearchUser("");
         setSelectedProf(item);
     };
 
@@ -71,7 +62,14 @@ const UsersList = () => {
     };
 
     if (users) {
-        const filteredUsers = selectedProf
+        const filteredUsers = searchUser
+            ? users.filter(
+                  (user) =>
+                      user.name
+                          .toLowerCase()
+                          .indexOf(searchUser.toLowerCase()) !== -1
+              )
+            : selectedProf
             ? users.filter(
                   (user) =>
                       JSON.stringify(user.profession) ===
@@ -87,8 +85,7 @@ const UsersList = () => {
         );
         const usersCrop = paginate(sortedUsers, currentPage, pageSize);
         const clearFilter = () => {
-            setData("");
-            handleSearch();
+            setSearchUser("");
             setSelectedProf();
         };
 
@@ -112,10 +109,13 @@ const UsersList = () => {
                 )}
                 <div className="d-flex flex-column">
                     <SearchStatus length={count} />
-                    <SearchUser
-                        handleSearch={handleSearch}
-                        data={data}
-                        setData={setData}
+                    <input
+                        type="text"
+                        name="searchUser"
+                        onChange={handleSearch}
+                        className="form-control me-2"
+                        placeholder="Поиск"
+                        value={searchUser}
                     />
                     {count > 0 && (
                         <UserTable
@@ -140,8 +140,8 @@ const UsersList = () => {
     }
     return "loading...";
 };
-UsersList.propTypes = {
+UsersListPage.propTypes = {
     users: PropTypes.array
 };
 
-export default UsersList;
+export default UsersListPage;
