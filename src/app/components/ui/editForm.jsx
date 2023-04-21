@@ -135,6 +135,15 @@ const EditForm = ({ userId }) => {
     if (!load && professions.length > 0) {
         return (
             <div className="container">
+                <button
+                    className="btn btn-primary"
+                    onClick={() => {
+                        history.goBack();
+                    }}
+                >
+                    Назад
+                </button>
+
                 <div className="row">
                     <div className="col-md-6 offset-md-3 p-4 shadow">
                         <form onSubmit={handleSubmit}>

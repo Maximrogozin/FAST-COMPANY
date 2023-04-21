@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import api from "../../../api";
-import QualitiesList from "../../ui/qualities/qualitiesList";
-import { Link } from "react-router-dom";
+import Comments from "../comments/comments";
+import UserCard from "../../ui/userCard";
+import QualitiesCard from "../../ui/qualitiesCard";
+import MeetingsCard from "../../ui/meetingsCard";
 
 const UserPage = ({ userId }) => {
     const [user, setUser] = useState();
@@ -13,20 +15,17 @@ const UserPage = ({ userId }) => {
 
     if (user) {
         return (
-            <div>
-                <h1> {user.name}</h1>
-                <h2>Профессия: {user.profession.name}</h2>
-                <QualitiesList qualities={user.qualities} />
-                <p>completedMeetings: {user.completedMeetings}</p>
-                <h2>Rate: {user.rate}</h2>
-
-                <Link
-                    className="nav-link "
-                    aria-current="page"
-                    to={`/users/${user._id}/edit`}
-                >
-                    Изменить
-                </Link>
+            <div className="container">
+                <div className="row gutters-sm">
+                    <div className="col-md-4 mb-3">
+                        <UserCard user={user} />
+                        <QualitiesCard user={user} />
+                        <MeetingsCard user={user} />
+                    </div>
+                    <div className="col-md-8">
+                        <Comments pageId={userId} />
+                    </div>
+                </div>
             </div>
         );
     } else {

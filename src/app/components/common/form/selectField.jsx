@@ -21,6 +21,8 @@ const SelectField = ({
             ? Object.values(options)
             : options;
 
+    console.log(optionsArray);
+
     return (
         <div className="mb-4">
             <label htmlFor={name} className="form-label">
@@ -40,7 +42,7 @@ const SelectField = ({
                 {optionsArray.length > 0 &&
                     optionsArray.map((option) => (
                         <option value={option.value} key={option.value}>
-                            {option.label}
+                            {option.name}
                         </option>
                     ))}
             </select>
@@ -52,7 +54,7 @@ const SelectField = ({
 SelectField.propTypes = {
     defaultOption: PropTypes.string,
     label: PropTypes.string,
-    value: PropTypes.string,
+    value: PropTypes.string.isRequired,
     onChange: PropTypes.func,
     error: PropTypes.string,
     options: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
